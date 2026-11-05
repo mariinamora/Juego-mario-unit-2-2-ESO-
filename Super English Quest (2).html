@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Super English Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--sky1:#5c94fc;--sky2:#a9d0ff;--ink:#1b1f3b;--panel:#fffdf4;--block:#fbb82a;--blockd:#b36a00;--brick:#c84c0c;--grass:#3fbf3f;--red:#e8392f;--green:#1f9d3a;--cloud:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sky1:#14183f;--sky2:#2d3a8c;--cloud:#8f9bd8}}
+:root[data-theme="dark"]{--sky1:#14183f;--sky2:#2d3a8c;--cloud:#8f9bd8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:"Fredoka","Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(var(--sky1),var(--sky2));min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+.cloud{position:fixed;background:var(--cloud);border-radius:50px;height:34px;width:110px;opacity:.9;z-index:0;animation:drift 60s linear infinite}
+.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud:before{width:50px;height:50px;top:-24px;left:14px}.cloud:after{width:38px;height:38px;top:-16px;left:52px}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(110vw)}}
+.hud{position:relative;z-index:2;display:flex;justify-content:space-between;gap:8px;padding:12px 16px;color:#fff;font-weight:700;font-size:1.1rem;text-shadow:2px 2px 0 rgba(0,0,0,.35);flex-wrap:wrap}
+#stage{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:8px 14px 24px;text-align:center}
+.ground{height:44px;background:repeating-linear-gradient(90deg,transparent 0 39px,rgba(0,0,0,.25) 39px 41px),linear-gradient(var(--grass) 0 10px,var(--brick) 10px);border-top:4px solid #1f7a1f;position:relative;z-index:2}
+h1{font-size:clamp(2.2rem,8vw,4.2rem);margin:0;color:#fff;text-shadow:4px 4px 0 var(--brick),7px 7px 0 rgba(0,0,0,.3);letter-spacing:1px}
+h2{margin:0;color:#fff;text-shadow:3px 3px 0 rgba(0,0,0,.35)}
+p{margin:0}
+.btn{font:inherit;font-weight:700;font-size:1.15rem;padding:12px 24px;border:3px solid var(--ink);border-radius:14px;background:var(--block);color:var(--ink);box-shadow:0 5px 0 var(--blockd);cursor:pointer;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--blockd)}
+.btn.red{background:var(--red);color:#fff;box-shadow:0 5px 0 #8e1f18}
+.btn:focus-visible,.sym:focus-visible,.gap:focus-visible{outline:4px solid #fff;outline-offset:2px}
+.menu{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.world{width:min(300px,86vw);padding:18px;background:var(--panel);border:4px solid var(--ink);border-radius:18px;box-shadow:0 8px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;gap:10px;align-items:center}
+.world b{font-size:1.5rem}
+.panel{background:var(--panel);border:4px solid var(--ink);border-radius:18px;padding:16px 18px;max-width:640px;width:100%;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.track{position:relative;width:min(640px,92vw);height:38px;border-bottom:6px dashed rgba(255,255,255,.7)}
+.track .hero{position:absolute;bottom:-4px;font-size:2rem;transition:left .35s;transform:translateX(-50%)}
+.track .flag{position:absolute;right:0;bottom:0;font-size:2rem}
+.cards{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+.card{position:relative;width:min(78vw,38vh,340px);aspect-ratio:1;border-radius:50%;background:var(--panel);border:5px solid var(--ink);box-shadow:0 8px 0 rgba(0,0,0,.3)}
+.card.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.sym{position:absolute;width:29%;transform:translate(-50%,-50%);background:none;border:0;border-radius:12px;font:inherit;color:var(--ink);cursor:pointer;line-height:1.05;padding:2px;font-size:clamp(9px,2.6vw,13px);font-weight:600}
+.sym i{display:block;font-style:normal;font-size:clamp(24px,7vw,40px)}
+.sym:hover{background:#ffe9a8}
+.sent{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;font-size:clamp(1.25rem,5vw,1.9rem);font-weight:600;margin:14px 0}
+.gap{width:38px;height:38px;border-radius:8px;border:3px solid var(--blockd);background:var(--block);font:inherit;font-weight:700;color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--blockd)}
+.gap:hover{animation:bump .25s}
+@keyframes bump{50%{transform:translateY(-8px)}}
+.chip{display:inline-block;background:var(--ink);color:#ffd23f;padding:6px 16px;border-radius:30px;font-weight:700;font-size:1.3rem}
+.hl{background:#ffd23f;border-radius:8px;padding:0 8px}
+.rules{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.rules div{flex:1 1 220px;border:3px solid var(--ink);border-radius:12px;padding:10px;background:#fff}
+.fb{min-height:1.6em;font-weight:700}.ok{color:var(--green)}.no{color:var(--red)}
+.pop{animation:pop .5s}@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.scene{position:relative;width:min(640px,94vw);height:230px;margin-top:8px}
+.pole{position:absolute;left:70%;bottom:0;width:7px;height:180px;background:#f4f4f4;border:2px solid var(--ink);border-radius:4px}
+.pole:before{content:"";position:absolute;top:-12px;left:-6px;width:15px;height:15px;border-radius:50%;background:#ffd23f;border:2px solid var(--ink)}
+.flagc{position:absolute;top:8px;left:6px;font-size:2rem;animation:flagdown 1.2s 2.9s ease-in forwards}
+@keyframes flagdown{to{top:136px}}
+.castle{position:absolute;right:0;bottom:0;font-size:4.6rem;line-height:1}
+.runner{position:absolute;left:0;bottom:0;animation:runner 5s linear forwards}
+@keyframes runner{0%{left:0;bottom:0}50%{left:62%;bottom:0}58%{left:68%;bottom:120px}80%{left:68%;bottom:6px}100%{left:84%;bottom:0}}
+.fw{position:absolute;top:0;left:0;right:0;font-size:2.2rem;opacity:0;animation:fwin .6s 4.8s forwards}
+@keyframes fwin{to{opacity:1}}
+.fwin{animation:pop .5s 4.8s both}
+.mb{font:inherit;background:rgba(0,0,0,.25);border:2px solid #fff;border-radius:10px;color:#fff;cursor:pointer;font-size:1.1rem;padding:0 10px}
+.mb:focus-visible{outline:4px solid #fff;outline-offset:2px}
+.teams{position:relative;z-index:2;display:flex;gap:10px;justify-content:center;padding:0 12px 6px;flex-wrap:wrap}
+.tm{display:flex;align-items:center;gap:8px;padding:6px 12px;border:3px solid var(--ink);border-radius:14px;background:var(--panel);font-weight:700}
+.tm.t1{border-color:#e8392f}.tm.t2{border-color:#2a5be8}
+.sc{font-size:1.6rem;min-width:2ch;text-align:center}
+.pm{font:inherit;font-weight:700;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--block);color:var(--ink);cursor:pointer;font-size:1.2rem;line-height:1}
+.pm:focus-visible{outline:4px solid #fff;outline-offset:2px}
+.turn{display:inline-block;color:#fff;padding:4px 18px;border-radius:20px;font-weight:700;font-size:1.2rem;margin-bottom:8px}
+.turn.t1{background:#e8392f}.turn.t2{background:#2a5be8}
+</style>
+</head>
+<body>
+<div class="cloud" style="top:12%;left:0"></div><div class="cloud" style="top:38%;left:0;animation-duration:90s;animation-delay:-30s"></div>
+<div class="hud"><span id="h1">Super English Quest</span><span id="h2"></span><span id="h3">🪙 0</span><button class="mb" id="mb" onclick="toggleMusic()" aria-label="Música">🎵</button></div>
+<div class="teams" id="teams"></div><main id="stage"></main>
+<div class="ground"></div>
+<script>
+const $=s=>document.querySelector(s), st=$("#stage");
+let coins=0,timer=null,done={1:false,2:false};
+const rnd=n=>Math.floor(Math.random()*n), shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+function beep(f,d=.12,t="square"){try{const c=beep.c||(beep.c=new(window.AudioContext||window.webkitAudioContext)()),o=c.createOscillator(),g=c.createGain();o.type=t;o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d)}catch(e){}}
+const good=()=>{beep(988,.07);setTimeout(()=>beep(1319,.15),70)}, bad=()=>beep(150,.3,"sawtooth");
+function hud(a,b){$("#h1").textContent=a;$("#h2").textContent=b||"";$("#h3").textContent="🪙 "+coins}
+function stop(){clearInterval(timer)}
+
+/* ---------- Música de fondo (melodía original, 8 bits) ---------- */
+let teamMode=true;const pts={1:0,2:0};
+function renderTeams(){const el=$("#teams");if(!teamMode){el.style.display="none";return}el.style.display="flex";el.innerHTML=[1,2].map(t=>`<div class="tm t${t}"><b>Team ${t}</b><button class="pm" onclick="addPt(${t},-1)" aria-label="Quitar punto Team ${t}">−</button><span class="sc">${pts[t]}</span><button class="pm" onclick="addPt(${t},1)" aria-label="Sumar punto Team ${t}">+</button></div>`).join("")}
+function addPt(t,n){pts[t]=Math.max(0,pts[t]+n);renderTeams();if(n>0)good()}
+function toggleTeams(){teamMode=!teamMode;goMenu()}
+let mOn=true,mStep=0,mT=null;
+const MEL=[392,0,523,0,659,523,0,392,440,0,587,0,698,587,0,440,523,0,659,0,784,659,0,523,392,0,494,587,494,0,392,0],BAS=[131,147,165,131,175,147,196,131];
+const actx=()=>beep.c||(beep.c=new(window.AudioContext||window.webkitAudioContext)());
+function nt(f,d,t,v){const c=actx(),o=c.createOscillator(),g=c.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d)}
+function tick(){if(!mOn)return;try{const m=MEL[mStep%32];if(m)nt(m,.14,"square",.025);if(mStep%4===0)nt(BAS[(mStep/4)%8],.55,"triangle",.06);mStep++}catch(e){}}
+function startMusic(){if(mT)return;try{actx().resume();mT=setInterval(tick,150)}catch(e){}}
+function toggleMusic(){mOn=!mOn;$("#mb").textContent=mOn?"🎵":"🔇";if(mOn)startMusic()}
+document.addEventListener("pointerdown",startMusic,{once:true});
+
+/* ---------- Vocabulario (31 símbolos = 31 cartas Dobble de orden 5) ---------- */
+const V=[["🛁","bathroom"],["🛏️","bedroom"],["🚗","garage"],["🍳","kitchen"],["🛋️","living room"],["🌀","washing machine"],["🪥","brush your teeth"],["📝","do homework"],["👕","get dressed"],["⏰","get up"],["🏃","go for a run"],["😴","go to bed"],["🚿","have a shower"],["🎮","play videogames"],["📖","read a book"],["🚲","ride your bike"],["🐕","walk the dog"],["🪴","water the plants"],["☕","have a break"],["🌍","Africa"],["🌏","Asia"],["🏰","Europe"],["🌎","South America"],["🏞️","lake"],["🦉","night owl"],["🐦","early bird"],["🪵","sleep like a log"],["🌅","morning"],["☀️","afternoon"],["🌆","evening"],["🌙","night"]];
+const N=5, CARDS=[];
+CARDS.push([...Array(N+1).keys()]);
+for(let j=0;j<N;j++){const c=[0];for(let k=0;k<N;k++)c.push(N+1+N*j+k);CARDS.push(c)}
+for(let i=0;i<N;i++)for(let j=0;j<N;j++){const c=[i+1];for(let k=0;k<N;k++)c.push(N+1+N*k+((i*k+j)%N));CARDS.push(c)}
+
+/* ---------- Pantalla de título ---------- */
+function goMenu(){renderTeams();
+  stop();hud("Super English Quest","");
+  st.innerHTML=`<h1>SUPER ENGLISH QUEST</h1><p style="color:#fff;font-weight:600;text-shadow:2px 2px 0 rgba(0,0,0,.35)">Daily Life · elige tu nivel</p><button class="btn" onclick="toggleTeams()">Modo equipos: ${teamMode?"ON":"OFF"}</button>
+  <div class="menu">
+   <div class="world"><b>Mundo 1-1</b><span style="font-size:2.4rem">👀🔍</span><p>Reto 1: Dobble digital. Encuentra la imagen que se repite en las dos cartas.</p><button class="btn" onclick="dobble()">${done[1]?"⭐ ":""}Jugar</button></div>
+   <div class="world"><b>Mundo 1-2</b><span style="font-size:2.4rem">❓🧱</span><p>Reto 2: Adverbs of frequency. Golpea el bloque donde va el adverbio.</p><button class="btn" onclick="adverbs()">${done[2]?"⭐ ":""}Jugar</button></div>
+  </div>`;
+}
+function end(win,msg,retry,next){
+  stop();
+  if(win&&done[1]&&done[2])return finale();
+  st.innerHTML=`<div class="panel pop"><h2 style="color:var(--ink);text-shadow:none;font-size:2rem">${win?"🏁 ¡Nivel superado!":"💥 Game over"}</h2><p style="margin:10px 0 16px;font-size:1.2rem">${msg}</p>${teamMode?`<p style="font-size:1.3rem;font-weight:700;margin-bottom:14px">Team 1: ${pts[1]} · Team 2: ${pts[2]} — ${pts[1]==pts[2]?"¡Empate!":"¡Va ganando Team "+(pts[1]>pts[2]?1:2)+"!"}</p>`:""}
+  <div class="menu"><button class="btn red" onclick="${retry}()">Reintentar</button>${win&&next?`<button class="btn" onclick="${next}()">Siguiente nivel</button>`:""}<button class="btn" onclick="goMenu()">Menú</button></div>
+  ${done[1]&&done[2]?`<p style="margin-top:16px;font-weight:700">🏆 ¡Has completado los dos mundos! Total: ${coins} monedas.</p>`:""}</div>`;
+}
+
+/* ---------- Final: el héroe llega a la meta ---------- */
+function finale(){
+  hud("Finish line!","");
+  [523,659,784,1047,784,1047].forEach((f,k)=>setTimeout(()=>beep(f,.18),k*160+3800));
+  const hero='<svg viewBox="0 0 40 60" width="46" height="69" aria-hidden="true"><path d="M6 16a14 14 0 0 1 28 0z" fill="#e8392f"/><rect x="4" y="14" width="32" height="5" rx="2" fill="#b81f17"/><circle cx="20" cy="26" r="10" fill="#ffd2a0"/><circle cx="16" cy="25" r="1.6" fill="#1b1f3b"/><circle cx="24" cy="25" r="1.6" fill="#1b1f3b"/><path d="M14 31q6 5 12 0" stroke="#8a4b1c" stroke-width="2" fill="none"/><rect x="9" y="36" width="22" height="14" rx="4" fill="#2a5be8"/><rect x="8" y="50" width="10" height="8" rx="3" fill="#6b3a14"/><rect x="22" y="50" width="10" height="8" rx="3" fill="#6b3a14"/></svg>';
+  st.innerHTML=`<h1 style="font-size:clamp(2rem,7vw,3.4rem)">YOU MADE IT!</h1>
+  <div class="scene"><div class="pole"><div class="flagc">🚩</div></div><div class="castle">🏰</div><div class="runner">${hero}</div><div class="fw">🎆 🎇 🎆</div></div>
+  <div class="panel fwin"><p style="font-size:1.3rem;font-weight:700">You learned a lot today! Both worlds complete with ${coins} 🪙</p>${teamMode?`<p style="font-size:1.4rem;font-weight:700;margin-top:8px">🏆 Team 1: ${pts[1]} · Team 2: ${pts[2]} — ${pts[1]==pts[2]?"It is a tie!":"Team "+(pts[1]>pts[2]?1:2)+" wins!"}</p>`:""}
+  <div class="menu" style="margin-top:12px"><button class="btn" onclick="goMenu()">Menu</button><button class="btn red" onclick="finale()">Watch again</button></div></div>`;
+}
+
+/* ---------- Reto 1: Dobble ---------- */
+function dobble(){
+  stop();let hits=0,time=180,goal=15,combo=0,common,paused=false;
+  const ask=cb=>{paused=true;$("#cards").innerHTML=`<div class="panel pop"><b style="font-size:1.4rem">✅ ${V[common][0]} ${V[common][1]}</b><p style="margin:8px 0 12px;font-weight:600">¿Quién lo dijo primero?</p><div class="menu"><button class="btn red" data-t="1">Team 1</button><button class="btn" style="background:#6f93ff" data-t="2">Team 2</button><button class="btn" style="background:#ddd" data-t="0">Nadie</button></div></div>`;$("#cards").querySelectorAll("button").forEach(b=>b.onclick=()=>{const t=+b.dataset.t;if(t)addPt(t,1);paused=false;if(hits>=goal){done[1]=true;coins+=100;hud("Mundo 1-1","");return end(true,`15 aciertos. ¡Bonus de 100 monedas! Tienes ${coins} 🪙`,"dobble","adverbs")}cb()})};
+  st.innerHTML=`<div class="panel" style="padding:8px 14px"><b>Toca la imagen que está en las DOS cartas.</b> Si fallas, pierdes 3 segundos.</div>
+  <div class="track"><span class="hero" id="hero">🏃</span><span class="flag">🏁</span></div><div class="cards" id="cards"></div>`;
+  const draw=(c,el)=>{
+    const ids=shuf(c),pos=[[50,50]];
+    const off=Math.random()*72;
+    for(let k=0;k<5;k++){const a=(off+k*72)*Math.PI/180;pos.push([50+33*Math.sin(a),50-33*Math.cos(a)])}
+    el.innerHTML=ids.map((id,k)=>`<button class="sym" data-id="${id}" style="left:${pos[k][0]}%;top:${pos[k][1]}%"><i>${V[id][0]}</i>${V[id][1]}</button>`).join("");
+  };
+  const next=()=>{
+    const a=CARDS[rnd(31)];let b;do{b=CARDS[rnd(31)]}while(b===a);
+    common=a.find(x=>b.includes(x));
+    $("#cards").innerHTML='<div class="card"></div><div class="card"></div>';
+    const cs=document.querySelectorAll(".card");draw(a,cs[0]);draw(b,cs[1]);
+    cs.forEach(c=>c.onclick=e=>{
+      const s=e.target.closest(".sym");if(!s)return;
+      if(+s.dataset.id===common){hits++;combo++;coins+=10+Math.min(combo,5)*2;good();
+        $("#hero").style.left=(hits/goal*100)+"%";
+        if(hits>=goal&&!teamMode){done[1]=true;coins+=100;hud("Mundo 1-1","");return end(true,`15 aciertos. ¡Bonus de 100 monedas! Tienes ${coins} 🪙`,"dobble","adverbs")}
+        teamMode?ask(next):next();
+      }else{combo=0;time=Math.max(0,time-3);bad();cs.forEach(c=>{c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")});upd()}
+    });
+  };
+  const upd=()=>{hud("Mundo 1-1 · Dobble",`⏱ ${time}s · ${hits}/${goal}`+(combo>1?` · 🔥x${combo}`:""));
+    if(time<=0)end(false,`Se acabó el tiempo. Aciertos: ${hits}/${goal}`,"dobble")};
+  upd();next();$("#hero").style.left="0%";
+  timer=setInterval(()=>{if(!paused){time--;upd()}},1000);
+}
+
+/* ---------- Reto 2: Adverbs of frequency ---------- */
+const PCT={always:100,usually:90,often:70,sometimes:50,occasionally:30,rarely:10,"hardly ever":5,never:0};
+const S=[["always","My dad * cooks dinner","o"],["usually","We are * at home on Sundays","b"],["often","I * brush my teeth after lunch","o"],["sometimes","He is * late for school","b"],["never","They * play videogames at night","o"],["rarely","My sister is * tired in the morning","b"],["hardly ever","I * ride my bike to school","o"],["always","The kitchen is * clean","b"],["usually","She * gets up at seven","o"],["never","You are * late","b"],["often","My friends are * at the park","b"],["sometimes","We * walk the dog","o"],["rarely","I * read a book at night","o"],["always","The bedroom is * tidy","b"]];
+function adverbs(){
+  stop();hud("Mundo 1-2 · Adverbs","");
+  st.innerHTML=`<div class="panel pop"><h2 style="color:var(--ink);text-shadow:none">Where does the adverb go?</h2>
+  <div class="rules" style="margin:12px 0"><div><b>Verb to be (am / is / are)</b><br>Subject + <b>to be</b> + <span class="hl">adverb</span><br><small>She is <u>always</u> happy.</small></div>
+  <div><b>Other verbs</b><br>Subject + <span class="hl">adverb</span> + <b>verb</b><br><small>She <u>always</u> plays games.</small></div></div>
+  <button class="btn" onclick="play2()">¡Empezar!</button></div>`;
+}
+function play2(){
+  const Q=shuf(S).slice(0,10);let i=0,lives=3;
+  const show=()=>{
+    const [adv,txt,t]=Q[i],w=txt.split(" "),pos=w.indexOf("*");w.splice(pos,1);
+    hud("Mundo 1-2 · Adverbs",teamMode?`Turno: Team ${i%2+1} · ${i+1}/10`:`${"❤️".repeat(lives)} · ${i+1}/10`);
+    let h="";for(let k=0;k<=w.length;k++){h+=`<button class="gap" data-p="${k}" aria-label="gap ${k+1}">?</button>`;if(k<w.length)h+=`<span>${w[k]}</span>`}
+    st.innerHTML=`<div class="panel">${teamMode?`<p class="turn t${i%2+1}">Team ${i%2+1}</p>`:""}<span class="chip">🪙 ${adv} · ${PCT[adv]}%</span><div class="sent" id="s">${h}</div><p class="fb" id="fb">Golpea el bloque ? correcto</p><div id="nx" style="margin-top:10px"></div></div>`;
+    document.querySelectorAll(".gap").forEach(g=>g.onclick=()=>{
+      const ok=+g.dataset.p===pos;
+      const full=w.slice(0,pos).concat(`<span class="hl">${adv}</span>`,w.slice(pos)).join(" ");
+      $("#s").innerHTML=full;
+      const why=t==="b"?"Con el verbo to be, el adverbio va DESPUÉS.":"Con otros verbos, el adverbio va ANTES.";
+      if(ok){coins+=20;if(teamMode)addPt(i%2+1,1);good();$("#fb").className="fb ok";$("#fb").textContent="✔ ¡Correcto! "+why}
+      else{if(!teamMode)lives--;bad();$("#fb").className="fb no";$("#fb").textContent="✘ "+why}
+      hud("Mundo 1-2 · Adverbs",`${"❤️".repeat(Math.max(lives,0))} · ${i+1}/10`);
+      $("#nx").innerHTML='<button class="btn" id="go">Siguiente</button>';
+      $("#go").onclick=()=>{
+        if(lives<=0)return end(false,"Te has quedado sin vidas. Repasa la regla y vuelve a intentarlo.","adverbs");
+        if(++i>=10){done[2]=true;coins+=100;return end(true,`¡10 frases! Bonus de 100 monedas. Tienes ${coins} 🪙`,"adverbs","")}
+        show();
+      };
+      $("#go").focus();
+    });
+  };
+  show();
+}
+goMenu();
+</script>
+</body>
+</html>
